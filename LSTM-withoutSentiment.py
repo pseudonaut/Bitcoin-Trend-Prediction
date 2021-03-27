@@ -166,7 +166,6 @@ actualValues = reshape(actualValues, actualValues.shape[0])
 plt.plot(history.history['loss'], label='train')
 plt.plot(history.history['val_loss'], label='validation')
 plt.legend()
-plt.savefig(fileName+' Loss Graph.png', dpi=700)
 plt.show()
 
 
@@ -182,7 +181,7 @@ plt.ylabel('VWAP')
 plt.legend()
 
 # Uncomment below line to save the figure
-plt.savefig(fileName+' Trend Graph.png', dpi=700)
+plt.savefig('Trend Graph.png', dpi=700)
 plt.show()
 
 
@@ -213,7 +212,7 @@ timestamp = DataFrame(dataset['timestamp'][n_train_days:], columns= ['timestamp'
 timestamp.reset_index(drop=True, inplace=True)
 results=concat([timestamp,actual,predicted], axis=1)
 results.dropna(inplace=True)
-results.to_csv(fileName + " Results.csv", index= False)
+results.to_csv("Results - withoutSentiment.csv", index= False)
 
 
 # In[ ]:

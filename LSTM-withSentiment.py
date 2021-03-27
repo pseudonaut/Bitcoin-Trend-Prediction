@@ -54,7 +54,7 @@ def series_to_supervised(data, n_in=1, n_out=1, dropnan=True):
     return agg
 
 
-# In[14]:
+# In[3]:
 
 
 # Read Data and Extract Values
@@ -66,7 +66,7 @@ valuesSentiment = dataset.iloc[:,3:].values #Getting total sentiment scores only
 valuesBTC = dataset.iloc[:,4:].values #Getting vwap scores only
 
 
-# In[5]:
+# In[4]:
 
 
 # Scaling
@@ -75,7 +75,7 @@ scaler = scaler.fit(values)
 scaled = scaler.fit_transform(values)
 
 
-# In[6]:
+# In[5]:
 
 
 # Convert Series to Supervised Data
@@ -101,7 +101,7 @@ train_X = train_X.reshape((train_X.shape[0], 1, train_X.shape[1]))
 test_X = test_X.reshape((test_X.shape[0], 1, test_X.shape[1]))
 
 
-# In[7]:
+# In[6]:
 
 
 #Building LSTM Neural Network model
@@ -122,21 +122,21 @@ history = model.fit(train_X, train_y, epochs = 200, batch_size=25, validation_da
 print(history.history)
 
 
-# In[8]:
+# In[7]:
 
 
 # Predicition
 model_prediction = model.predict(test_X)
 
 
-# In[9]:
+# In[8]:
 
 
 # Reshae Test_X
 test_X = test_X.reshape((test_X.shape[0], test_X.shape[2]))
 
 
-# In[10]:
+# In[9]:
 
 
 # BTC Value Scaling
@@ -145,7 +145,7 @@ scalerBTC = scaler.fit(values)
 scaledBTC = scaler.fit_transform(values)
 
 
-# In[12]:
+# In[10]:
 
 
 # Inverse Scale
@@ -153,24 +153,22 @@ scaler = MinMaxScaler(feature_range = (0,1))
 scaler = scaler.fit(valuesBTC)
 model_prediction_unscale = scaler.inverse_transform(model_prediction)
 
-predictedValues = reshape(model_prediction_unscale, model_prediction_unscale.shape[0])
+predictedValues = np.reshape(model_prediction_unscale, model_prediction_unscale.shape[0])
 actualValues = valuesBTC[n_train_days+1:]
-actualValues = reshape(actualValues, actualValues.shape[0])
+actualValues = np.reshape(actualValues, actualValues.shape[0])
 
 
-# In[16]:
+# In[11]:
 
 
 #Plotting training loss vs validation loss
 plt.plot(history.history['loss'], label='train')
 plt.plot(history.history['val_loss'], label='validation')
 plt.legend()
-# Uncomment below line to save the figure
-plt.savefig(fileName+' Loss Graph.png', dpi=700)
 plt.show()
 
 
-# In[17]:
+# In[12]:
 
 
 #Visualising Results (Actual vs Predicted)
@@ -182,23 +180,23 @@ plt.ylabel('VWAP')
 plt.legend()
 
 # Uncomment below line to save the figure
-plt.savefig(fileName+' Trend Graph.png', dpi=700)
+plt.savefig('Trend Graph.png', dpi=700)
 
 plt.show()
 
 
-# In[19]:
+# In[13]:
 
 
-actual= DataFrame(actualValues, columns= ['Actual Value'])
-predicted=DataFrame(predictedValues, columns= ['Predicted Value'])
+actual= pd.DataFrame(actualValues, columns= ['Actual Value'])
+predicted=pd.DataFrame(predictedValues, columns= ['Predicted Value'])
 
 
-# In[20]:
+# In[14]:
 
 
 #Calculating RMSE and MAE
-errorDF=concat([actual,predicted], axis=1)
+errorDF=pd.concat([actual,predicted], axis=1)
 errorDF.dropna(inplace=True)
 rmse = sqrt(mean_squared_error(errorDF.iloc[:,0], errorDF.iloc[:,1]))
 mae = mean_absolute_error(errorDF.iloc[:,0], errorDF.iloc[:,1])
@@ -206,15 +204,15 @@ print('Test MAE: %.3f' % mae)
 print('Test RMSE: %.3f' % rmse)
 
 
-# In[22]:
+# In[15]:
 
 
 # Write to csv
-timestamp = DataFrame(dataset['timestamp'][n_train_days:], columns= ['timestamp'])
+timestamp = pd.DataFrame(dataset['timestamp'][n_train_days:], columns= ['timestamp'])
 timestamp.reset_index(drop=True, inplace=True)
-results=concat([timestamp,actual,predicted], axis=1)
+results=pd.concat([timestamp,actual,predicted], axis=1)
 results.dropna(inplace=True)
-results.to_csv(fileName + " Results.csv", index= False)
+results.to_csv("Results - withSentiment.csv", index= False)
 
 
 # In[ ]:
