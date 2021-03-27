@@ -181,7 +181,8 @@ plt.ylabel('VWAP')
 plt.legend()
 
 # Uncomment below line to save the figure
-plt.savefig('Trend Graph.png', dpi=700)
+# plt.savefig('Trend Graph.png', dpi=700)
+
 plt.show()
 
 

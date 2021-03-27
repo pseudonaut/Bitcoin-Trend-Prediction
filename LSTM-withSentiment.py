@@ -153,9 +153,9 @@ scaler = MinMaxScaler(feature_range = (0,1))
 scaler = scaler.fit(valuesBTC)
 model_prediction_unscale = scaler.inverse_transform(model_prediction)
 
-predictedValues = np.reshape(model_prediction_unscale, model_prediction_unscale.shape[0])
+predictedValues = reshape(model_prediction_unscale, model_prediction_unscale.shape[0])
 actualValues = valuesBTC[n_train_days+1:]
-actualValues = np.reshape(actualValues, actualValues.shape[0])
+actualValues = reshape(actualValues, actualValues.shape[0])
 
 
 # In[11]:
@@ -180,7 +180,7 @@ plt.ylabel('VWAP')
 plt.legend()
 
 # Uncomment below line to save the figure
-plt.savefig('Trend Graph.png', dpi=700)
+# plt.savefig('Trend Graph.png', dpi=700)
 
 plt.show()
 
@@ -188,15 +188,15 @@ plt.show()
 # In[13]:
 
 
-actual= pd.DataFrame(actualValues, columns= ['Actual Value'])
-predicted=pd.DataFrame(predictedValues, columns= ['Predicted Value'])
+actual= DataFrame(actualValues, columns= ['Actual Value'])
+predicted=DataFrame(predictedValues, columns= ['Predicted Value'])
 
 
 # In[14]:
 
 
 #Calculating RMSE and MAE
-errorDF=pd.concat([actual,predicted], axis=1)
+errorDF=concat([actual,predicted], axis=1)
 errorDF.dropna(inplace=True)
 rmse = sqrt(mean_squared_error(errorDF.iloc[:,0], errorDF.iloc[:,1]))
 mae = mean_absolute_error(errorDF.iloc[:,0], errorDF.iloc[:,1])
@@ -208,9 +208,9 @@ print('Test RMSE: %.3f' % rmse)
 
 
 # Write to csv
-timestamp = pd.DataFrame(dataset['timestamp'][n_train_days:], columns= ['timestamp'])
+timestamp = DataFrame(dataset['timestamp'][n_train_days:], columns= ['timestamp'])
 timestamp.reset_index(drop=True, inplace=True)
-results=pd.concat([timestamp,actual,predicted], axis=1)
+results=concat([timestamp,actual,predicted], axis=1)
 results.dropna(inplace=True)
 results.to_csv("Results - withSentiment.csv", index= False)
 
